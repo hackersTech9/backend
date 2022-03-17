@@ -7,8 +7,8 @@ export default class MoviesApi  {
 
     }
 
-    async getAll() {
-        return await this.moviesDao.getAll();
+    async getAll(limit) {
+        return await this.moviesDao.getAll(limit);
     }
 
 

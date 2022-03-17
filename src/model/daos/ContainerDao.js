@@ -16,9 +16,9 @@ export default class ContainerDao {
         logger.info(`Mongo Base:${base} collection: ${collection} instanciada`)
     }
 
-    async getAll() {
+    async getAll(limite=0) {
         try {
-            const array = await this.collection.find().toArray()
+            const array = await this.collection.find().limit(limite).toArray()
             return array
         }
         catch (err) {

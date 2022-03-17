@@ -6,8 +6,8 @@ export default class MusicApi {
         this.musicDao = new MusicDao();
     }
 
-    async getAll() {
-        const musicObj = await this.musicDao.getAll();
+    async getAll(limit) {
+        const musicObj = await this.musicDao.getAll(limit);
         return musicObj;
     }   
 

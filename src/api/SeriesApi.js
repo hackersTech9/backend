@@ -6,8 +6,8 @@ export default class SeriesApi {
         this.seriesDao = new SeriesDao();
     }
 
-    async getAll() {
-        const seriesObj = await this.seriesDao.getAll();
+    async getAll(limit) {
+        const seriesObj = await this.seriesDao.getAll(limit);
         return seriesObj;
     }   
 

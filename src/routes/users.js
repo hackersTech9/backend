@@ -17,6 +17,9 @@ UsersRoutes.get('/failsignup', userController.getfailsignup)
 
 UsersRoutes.get('/logout', userController.getlogout)
 
+// UsersRoutes.post('/usuarios/role', userController.postRole)
+
+// UsersRoutes.delete('/usuarios/role', userController.deleleRole)
 
 export default UsersRoutes 
 

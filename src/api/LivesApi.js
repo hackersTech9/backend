@@ -7,8 +7,8 @@ export default class LivesApi {
         this.livesDao = new LivesDao();
     }
 
-    async getAll() {
-        const livesObj = await this.livesDao.getAll();
+    async getAll(limit) {
+        const livesObj = await this.livesDao.getAll(limit);
         return livesObj;
     }   
 

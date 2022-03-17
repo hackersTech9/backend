@@ -5,7 +5,7 @@ import { mdwSignUp, mdwLogin } from './UsersController.js'
 
 import UsersApi from '../api/UsersApi.js'
 const users = new UsersApi();
-import logger from '../logger.js'
+
 
 
 passport.use('signup', new LocalStrategy({usernameField: 'email', passwordField: 'password', passReqToCallback: true }, mdwSignUp))

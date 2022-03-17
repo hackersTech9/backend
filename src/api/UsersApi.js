@@ -2,19 +2,11 @@ import UsersDao from '../model/daos/UsersDao.js';
 import UserDto from '../model/dtos/UserDto.js';
 
 import logger from '../logger.js'
-import MoviesDao from '../model/daos/MoviesDao.js'
-import LivesDao from '../model/daos/LivesDao.js'
-import MusicDao from '../model/daos/MusicDao.js'
-import SeriesDao from '../model/daos/SeriesDao.js'
 
 export default class UsersApi {
 
     constructor() {
         this.usersDao = new UsersDao();
-        this.moviesDao = new MoviesDao()
-        this.livesDao = new LivesDao()
-        this.seriesDao = new SeriesDao()
-        this.musicDao = new MusicDao()
     }
 
     async emailExists(email) {
@@ -27,65 +19,38 @@ export default class UsersApi {
             else throw err
         }
     }
+    
+
 
     async get(email) {
         const data = await this.usersDao.getByEmail(email);
-
-        console.log(data)
         return new UserDto(data);
     }
+    
 
-    async login(email, password) {
-        try {
+    async login(email, password){
+        try{
             const usuario = await this.get(email)
-            if (!usuario.isValidPassword(password))
+
+            if (!usuario.isValidPassword(password)) 
                 return false
-            else {
-                await this.completePreference(usuario);
+            else
                 return usuario.get();
-            }
         }
-        catch (err) {
-            logger.error(`fallo el login de mail error:${err}`)
+        catch(err){
+             logger.error(`fallo el login de mail error:${err}`)             
         }
 
     }
 
-    async completePreference(usuario){
-        if( usuario.movies.length < 3)
-        {
-            const movies = await this.moviesDao.getAll()
-            usuario.setMovies(movies)
-        }
-
-        if( usuario.live.length < 3)
-        {
-            const lives = await this.livesDao.getAll()
-            usuario.setlives(lives)
-        }
-
-        if( usuario.series.length < 3)
-        {
-            const series = await this.seriesDao.getAll()
-            usuario.setSeries(series)
-        }
-
-        if( usuario.music.length < 3)
-        {
-            const musics = await this.musicDao.getAll()
-            usuario.setMusic(musics)
-        }
-    }
-
-    async add(data) {
+    async add(data){
         try {
 
             const usuario = new UserDto(data)
             usuario._id = await this.usersDao.add(usuario)
 
             logger.info(`Registro Ok `);
-
-            await this.completePreference(usuario);
+    
             return usuario.get();
         }
         catch (err) {
@@ -95,7 +60,7 @@ export default class UsersApi {
     }
 
     //modify the password
-    async changePassword(user, passwordCurrent, passwordNew) {
+    async changePassword(user, passwordCurrent, passwordNew){
         try {
             //create user object with date of datebase
             const userBD = await this.usersDao.getByEmail(user.email);
@@ -106,19 +71,48 @@ export default class UsersApi {
                 //If you validate OK, modify password 
                 userObj.setNewPassword(passwordNew)
                 //save to database
-                const userNewBD = await this.usersDao.update(userObj)
+                const userNewBD = await this.usersDao.update(userObj)     
                 const userNewObj = new UserDto(userNewBD);
                 return userNewObj;
-            } else {
+            }else{
                 logger.error(`Error validation email and password`);
                 throw new CustomError(400, `Error validation email and password`)
-            }
+            }            
         }
         catch (err) {
             logger.error(`Error in Saving user: ${err}`);
             throw (err);
         }
     }
+    
+
+    async AgregarRole(email, role)
+    {
+        try{
+            const dto = await this.usersDao.addRole(email, role)
+            return new UserDto(dto);
+        }
+        catch(err)
+        {
+            logger.error(`Error in Saving user: ${err}`);
+            throw (err);
+        }
+    }
+    
+    async EliminarRole(email, role)
+    {
+        try{
+            const dto = await this.usersDao.delRole(email, role)
+            return new UserDto(dto);
+        }
+        catch(err)
+        {
+            logger.error(`Error in Saving user: ${err}`);
+            throw (err);
+        }
+    }
+
+
 
 }
 

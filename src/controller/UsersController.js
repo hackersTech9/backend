@@ -1,8 +1,17 @@
 import UsersApi from '../api/UsersApi.js'
+import LivesApi from '../api/LivesApi.js';
+import MusicApi from '../api/MusicApi.js';
+import SeriesApi from '../api/SeriesApi.js';
+import MoviesApi from '../api/MoviesApi.js';
+
 import logger from '../logger.js'
 import schema, {schPassword} from '../validations/users.js'
 
 const users = new UsersApi();
+const lives = new LivesApi();
+const music = new MusicApi();
+const series = new SeriesApi();
+const movies = new MoviesApi();
 
 export async function mdwSignUp(req, email, password, done) {
 
@@ -34,8 +43,23 @@ export async function mdwLogin(email, password, done) {
 
 };
 
-export function postLogin(req, res) {
-    res.status(200).json(req.user)
+export async function postLogin(req, res) {
+
+    let vivo        = await lives.getAll(3);
+    let musica      = await music.getAll(3);
+    let serie      = await series.getAll(3);
+    let peliculas   = await movies.getAll(3);
+
+    let usuario = req.user;
+
+    let objecto = {
+        ...usuario,
+        vivo,
+        musica,
+        serie,
+        peliculas
+    }
+    res.status(200).json(objecto)
 }
 
 export function postSignup(req, res) {
