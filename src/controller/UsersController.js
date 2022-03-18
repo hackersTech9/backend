@@ -37,7 +37,7 @@ export async function mdwLogin(email, password, done) {
 export async function postLogin(req, res) {
     const user = req.user;
     const token = jwt.sign({ user: user }, jwtOpts.secretOrKey, { expiresIn: jwtOpts.expireIn });
-    res.status(200).json({ token })
+    res.status(200).json({ data: user, token })
 }
 
 export function validateToken(token, cb) {
