@@ -15,7 +15,7 @@ UsersRoutes.post('/signup',
     userController.postLogin);
 
 
-UsersRoutes.put('/users/password', userController.mwdIsAuth, userController.putPassword)
+UsersRoutes.put('/users/password', passport.authenticate('jwt', { session: false }), userController.putPassword)
 
 UsersRoutes.get('/faillogin', userController.getfaillogin)
 
