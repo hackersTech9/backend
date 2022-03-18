@@ -1,5 +1,8 @@
 import UsersApi from '../api/UsersApi.js'
 import logger from '../logger.js'
+import jwt from 'jsonwebtoken'
+import {jwtOpts} from '../../config/config.js'
+
 import schema, {schPassword} from '../validations/users.js'
 
 const users = new UsersApi();
@@ -20,9 +23,6 @@ export async function mdwSignUp(req, email, password, done) {
 }
 
 export async function mdwLogin(email, password, done) {
-
-    logger.info(`usuarios controller login email: ${email} `)
-
     try {
         const user = await users.login(email, password)
         return done(null, user);
@@ -34,9 +34,21 @@ export async function mdwLogin(email, password, done) {
 
 };
 
-export function postLogin(req, res) {
-    res.status(200).json(req.user)
+export async function postLogin(req, res) {
+    const user = req.user;
+    const token = jwt.sign({ user: user }, jwtOpts.secretOrKey, { expiresIn: jwtOpts.expireIn });
+    res.status(200).json({ token })
 }
+
+export function validateToken(token, cb) {
+
+    if (token.exp < Math.floor(Date.now() / 1000)) {
+        logger.warn('token caducado')
+        return cb(null, false)
+    }
+    else return cb(null, token.user);
+}
+
 
 export function postSignup(req, res) {
     res.status(200).json(req.user)
@@ -83,15 +95,7 @@ export async function putPassword(req, res) {
 }
 
 
-export async function postRole(req, res) {
-    const user = await users.AgregarRole(req.body.email, req.body.role);
-    res.status(201).json(user.get())
-}
 
-export async function deleteRole(req, res) {
-    const user = await users.EliminarRole(req.body.email, req.body.role);
-    res.status(204).json(user.get())
-}
 
 
 export async function mdwValidaUser(req, res, next) {

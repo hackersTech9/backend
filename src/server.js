@@ -7,7 +7,7 @@ import SeriesRoutes from './routes/series.js'
 import MusicRoutes from './routes/music.js'
 import MongoStore from 'connect-mongo'
 import config from '../config/config.js'
-import session from 'express-session';
+// import session from 'express-session';
 import LivesRoutes from './routes/lives.js';
 import MoviesRoutes from './routes/movies.js';
 
@@ -20,28 +20,28 @@ app.use(cors());
 /**************************************************************************************** */
 const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true }
 
-app.use(session({
-    /* ------------------------------------------------------------ */
-    /*           Persistencia por mongo atlas database             */
-    /* ------------------------------------------------------------ */
-    store: MongoStore.create({
-        //En Atlas connect App :  Make sure to change the node version to 2.2.12:
-        mongoUrl: config.MONGO_SESSION_URL,
-        mongoOptions: advancedOptions
-    }),
-    /* ------------------------------------------------------------ */
+// app.use(session({
+//     /* ------------------------------------------------------------ */
+//     /*           Persistencia por mongo atlas database             */
+//     /* ------------------------------------------------------------ */
+//     store: MongoStore.create({
+//         //En Atlas connect App :  Make sure to change the node version to 2.2.12:
+//         mongoUrl: config.MONGO_SESSION_URL,
+//         mongoOptions: advancedOptions
+//     }),
+//     /* ------------------------------------------------------------ */
 
-    secret: config.SECRET,
-    resave: true,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: config.SESSION_MAXAGE
-    }
-}))
+//     secret: config.SECRET,
+//     resave: true,
+//     saveUninitialized: false,
+//     cookie: {
+//         maxAge: config.SESSION_MAXAGE
+//     }
+// }))
 
 /**************************************************************************************** */
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 /**************************************************************************************** */
 
 // rutas apiRestFull

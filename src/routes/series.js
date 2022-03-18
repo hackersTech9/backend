@@ -1,11 +1,11 @@
 import { Router } from 'express'
-
+import passport from '../controller/PassportLocal.js'
 import  * as seriesController from '../controller/SeriesController.js'
-import {mwdIsAuth} from '../controller/UsersController.js'
+
 
 const SeriesRoutes = new Router();
 
-SeriesRoutes.get('/', mwdIsAuth, seriesController.getAll)
+SeriesRoutes.get('/', passport.authenticate('jwt', { session: false }), seriesController.getAll)
 
 
 export default SeriesRoutes 
